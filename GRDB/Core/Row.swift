@@ -19,12 +19,17 @@ public final class Row {
         self.init(impl: ArrayRowImpl(columns: dictionary.map { ($0, $1?.databaseValue ?? .null) }))
     }
     
+    /// TODO
+    public convenience init<Sequence: Swift.Sequence>(_ sequence: Sequence) where Sequence.Iterator.Element == (String, DatabaseValueConvertible?) {
+        self.init(impl: ArrayRowImpl(columns: sequence.map { ($0, $1?.databaseValue ?? .null) }))
+    }
+    
     /// Creates a row from [AnyHashable: Any].
     ///
     /// The result is nil unless all dictionary keys are strings, and values
     /// adopt DatabaseValueConvertible.
     public convenience init?(_ dictionary: [AnyHashable: Any]) {
-        var initDictionary = [String: DatabaseValueConvertible?]()
+        var columns: [(String, DatabaseValue)] = []
         for (key, value) in dictionary {
             guard let columnName = key as? String else {
                 return nil
@@ -32,9 +37,9 @@ public final class Row {
             guard let databaseValue = DatabaseValue(value: value) else {
                 return nil
             }
-            initDictionary[columnName] = databaseValue
+            columns.append((columnName, databaseValue))
         }
-        self.init(initDictionary)
+        self.init(impl: ArrayRowImpl(columns: columns))
     }
     
     /// Returns an immutable copy of the row.
@@ -706,7 +711,7 @@ extension Row : ExpressibleByDictionaryLiteral {
     ///     print(row)
     ///     // Prints <Row foo:1 foo:"bar" baz:NULL>
     public convenience init(dictionaryLiteral elements: (String, DatabaseValueConvertible?)...) {
-        self.init(impl: ArrayRowImpl(columns: elements.map { ($0, $1?.databaseValue ?? .null) }))
+        self.init(elements)
     }
 }
 

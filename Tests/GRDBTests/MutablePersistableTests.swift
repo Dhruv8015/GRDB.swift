@@ -132,8 +132,8 @@ class MutablePersistableTests: GRDBTestCase {
             person1.name = "Craig"
             try person1.update(db)
             XCTAssertTrue([
-                "UPDATE \"persons\" SET \"age\"=24, \"name\"='Craig' WHERE \"id\"=1",
-                "UPDATE \"persons\" SET \"name\"='Craig', \"age\"=24 WHERE \"id\"=1"
+                "UPDATE \"persons\" SET \"age\"=24, \"name\"='Craig' WHERE \"iD\"=1",
+                "UPDATE \"persons\" SET \"name\"='Craig', \"age\"=24 WHERE \"iD\"=1"
                 ].contains(self.lastSQLQuery))
             
             let rows = try Row.fetchAll(db, "SELECT * FROM persons ORDER BY id")
@@ -156,7 +156,7 @@ class MutablePersistableTests: GRDBTestCase {
             do {
                 person1.name = "Craig"
                 try person1.update(db, columns: [String]())
-                XCTAssertEqual(self.lastSQLQuery, "UPDATE \"persons\" SET \"id\"=1 WHERE \"id\"=1")
+                XCTAssertEqual(self.lastSQLQuery, "UPDATE \"persons\" SET \"iD\"=1 WHERE \"iD\"=1")
                 
                 let rows = try Row.fetchAll(db, "SELECT * FROM persons ORDER BY id")
                 XCTAssertEqual(rows.count, 2)
@@ -172,7 +172,7 @@ class MutablePersistableTests: GRDBTestCase {
                 person1.name = "Craig"
                 person1.age = 25
                 try person1.update(db, columns: [Column("name")])
-                XCTAssertEqual(self.lastSQLQuery, "UPDATE \"persons\" SET \"name\"='Craig' WHERE \"id\"=1")
+                XCTAssertEqual(self.lastSQLQuery, "UPDATE \"persons\" SET \"name\"='Craig' WHERE \"iD\"=1")
                 
                 let rows = try Row.fetchAll(db, "SELECT * FROM persons ORDER BY id")
                 XCTAssertEqual(rows.count, 2)
@@ -187,7 +187,7 @@ class MutablePersistableTests: GRDBTestCase {
             do {
                 person1.name = "David"
                 try person1.update(db, columns: ["AgE"])    // case insensitivity
-                XCTAssertEqual(self.lastSQLQuery, "UPDATE \"persons\" SET \"AgE\"=25 WHERE \"id\"=1")
+                XCTAssertEqual(self.lastSQLQuery, "UPDATE \"persons\" SET \"AgE\"=25 WHERE \"iD\"=1")
                 
                 let rows = try Row.fetchAll(db, "SELECT * FROM persons ORDER BY id")
                 XCTAssertEqual(rows.count, 2)

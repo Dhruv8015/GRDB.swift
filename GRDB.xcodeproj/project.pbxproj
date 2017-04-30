@@ -2516,10 +2516,10 @@
 		5659F4861EA8D94E004A4992 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				5659F4871EA8D94E004A4992 /* Utils.swift */,
-				5659F48F1EA8D964004A4992 /* ReadWriteBox.swift */,
 				5659F4971EA8D989004A4992 /* Pool.swift */,
+				5659F48F1EA8D964004A4992 /* ReadWriteBox.swift */,
 				5659F49F1EA8D997004A4992 /* Result.swift */,
+				5659F4871EA8D94E004A4992 /* Utils.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
