@@ -57,7 +57,7 @@ public struct PersistenceConflictPolicy {
 }
 
 public struct PersistenceContainer {
-    // lowercaseColumn: (column, value)
+    // [lowercaseColumn: (column, value)]
     fileprivate var storage: [String: (column: String, value: DatabaseValueConvertible?)] = [:]
     
     public mutating func encode(dictionary: [String: DatabaseValueConvertible?]) {
@@ -76,7 +76,7 @@ public struct PersistenceContainer {
         set { self[column.name] = newValue }
     }
     
-    func containsColumn(_ column: String) -> Bool {
+    func contains(column: String) -> Bool {
         return (storage.index(forKey: column) ?? storage.index(forKey: column.lowercased())) != nil
     }
     
@@ -704,7 +704,7 @@ final class DAO {
     /// Returns nil if and only if primary key is nil
     func updateStatement(columns: Set<String>, onConflict: Database.ConflictResolution) throws -> UpdateStatement? {
         for column in columns {
-            GRDBPrecondition(container.containsColumn(column), "\(type(of: record)).databaseEncode(to:): column \(column) can't be updated because it is missing")
+            GRDBPrecondition(container.contains(column: column), "\(type(of: record)).databaseEncode(to:): column \(column) can't be updated because it is missing")
         }
         
         let primaryKeyContainer = container[primaryKey.columns]
@@ -714,7 +714,7 @@ final class DAO {
         }
         
         var updatedContainer = PersistenceContainer()
-        for column in columns where !primaryKeyContainer.containsColumn(column) {
+        for column in columns where !primaryKeyContainer.contains(column: column) {
             updatedContainer[column] = container[column]
         }
         
